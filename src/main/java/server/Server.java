@@ -126,7 +126,7 @@ public class Server {
     }
 
     private Course parseCourse(String line) {
-        // Séparer les éléments de la ligne en utilisant la tabulation
+        // Séparer les éléments de la ligne en utilisant la tabulation (la séparation entre les éléments)
         String[] elements = line.split("\t");
 
         // Créer un objet Course avec les éléments de la ligne
