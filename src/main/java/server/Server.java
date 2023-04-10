@@ -2,6 +2,7 @@ package server;
 
 import javafx.util.Pair;
 import server.models.Course;
+import server.models.RegistrationForm;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -145,7 +146,43 @@ public class Server {
      La méthode gére les exceptions si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
-        // TODO: implémenter cette méthode
+        RegistrationForm registrationForm = null;
+
+        try {
+            Socket socket = this.client; // Récupérez le socket client approprié
+                    ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            registrationForm = (RegistrationForm) objectInputStream.readObject();
+            objectInputStream.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (registrationForm != null) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter("inscription.txt", true));
+                writer.write(registrationForm.toString());
+                writer.newLine();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+                printWriter.println("Confirmation: Votre formulaire d'inscription a été enregistré.");
+                printWriter.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+                printWriter.println("Erreur: Le formulaire d'inscription n'a pas été reçu.");
+                printWriter.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 
