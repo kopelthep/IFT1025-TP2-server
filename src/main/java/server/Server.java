@@ -149,8 +149,7 @@ public class Server {
         RegistrationForm registrationForm = null;
 
         try {
-            Socket socket = this.client; // Récupérez le socket client approprié
-                    ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(client.getInputStream());
             registrationForm = (RegistrationForm) objectInputStream.readObject();
             objectInputStream.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -159,7 +158,7 @@ public class Server {
 
         if (registrationForm != null) {
             try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter("inscription.txt", true));
+                BufferedWriter writer = new BufferedWriter(new FileWriter("registrations.txt", true));
                 writer.write(registrationForm.toString());
                 writer.newLine();
                 writer.close();
@@ -168,7 +167,7 @@ public class Server {
             }
 
             try {
-                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+                PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true);
                 printWriter.println("Confirmation: Votre formulaire d'inscription a été enregistré.");
                 printWriter.flush();
             } catch (IOException e) {
@@ -176,7 +175,7 @@ public class Server {
             }
         } else {
             try {
-                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+                PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true);
                 printWriter.println("Erreur: Le formulaire d'inscription n'a pas été reçu.");
                 printWriter.flush();
             } catch (IOException e) {
