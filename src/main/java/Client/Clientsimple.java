@@ -1,7 +1,7 @@
 package Client;
 
 
-
+import server.models.Course;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,7 +22,7 @@ public class Clientsimple {
 
     public static void main(String[] args) {
         try {
-            Clientsimple client = new Clientsimple("localhost", 12345);
+            Clientsimple client = new Clientsimple("localhost", 1337);
 
             Scanner scanner = new Scanner(System.in);
             System.out.println("*** Bienvenue au portail d'inscription de cours de l'UDEM ***");
