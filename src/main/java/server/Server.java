@@ -95,11 +95,15 @@ public class Server {
     public void handleLoadCourses(String arg) {
         List<Course> courses = new ArrayList<>();
         try {
-            BufferedReader br = new BufferedReader(new FileReader("cours.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("src/main/java/server/data/cours.txt"));
             String line;
 
             while ((line = br.readLine()) != null) {
                 String[] courseInfo = line.split(",");
+                if (courseInfo.length != 3) {
+                    System.err.println("Erreur de format dans le fichier cours.txt: " + line);
+                    continue;
+                }
                 String name = courseInfo[0].trim();
                 String code = courseInfo[1].trim();
                 String session = courseInfo[2].trim();
@@ -120,6 +124,7 @@ public class Server {
             e.printStackTrace();
         }
     }
+
 
     /**
      Récupérer l'objet 'RegistrationForm' envoyé par le client en utilisant 'objectInputStream', l'enregistrer dans un fichier texte
