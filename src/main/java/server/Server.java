@@ -94,51 +94,32 @@ public class Server {
      */
     public void handleLoadCourses(String arg) {
         List<Course> courses = new ArrayList<>();
-
         try {
-            // Lire le fichier cours.txt
-            BufferedReader reader = new BufferedReader(new FileReader("cours.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("cours.txt"));
             String line;
-            while ((line = reader.readLine()) != null) {
-                // Transformer chaque ligne en objet Course et l'ajouter à la liste
-                Course course = parseCourse(line);
+
+            while ((line = br.readLine()) != null) {
+                String[] courseInfo = line.split(",");
+                String name = courseInfo[0].trim();
+                String code = courseInfo[1].trim();
+                String session = courseInfo[2].trim();
+
+                Course course = new Course(name, code, session);
                 courses.add(course);
             }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            br.close();
 
-        // Filtrer les cours selon la session donnée en argument
-        List<Course> filteredCourses = courses.stream()
-                .filter(course -> course.getSession().equals(arg))
-                .collect(Collectors.toList());
+            List<Course> filteredCourses = courses.stream()
+                    .filter(course -> course.getSession().equalsIgnoreCase(arg))
+                    .collect(Collectors.toList());
 
-        // Envoyer la liste des objets Course au client via le socket en utilisant objectOutputStream
-        try {
-            Socket socket = this.client;
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject(filteredCourses);
             objectOutputStream.flush();
-            objectOutputStream.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    private Course parseCourse(String line) {
-        // Séparer les éléments de la ligne en utilisant la tabulation (la séparation entre les éléments)
-        String[] elements = line.split("\t");
-
-        // Créer un objet Course avec les éléments de la ligne
-        String name = elements[0];
-        String code = elements[1];
-        String session = elements[2];
-        Course course = new Course(name, code, session);
-
-        return course;
-    }
-
 
     /**
      Récupérer l'objet 'RegistrationForm' envoyé par le client en utilisant 'objectInputStream', l'enregistrer dans un fichier texte
@@ -146,41 +127,26 @@ public class Server {
      La méthode gere les exceptions si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
-        RegistrationForm registrationForm = null;
-
         try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(client.getInputStream());
-            registrationForm = (RegistrationForm) objectInputStream.readObject();
-            objectInputStream.close();
+            RegistrationForm registrationForm = (RegistrationForm) objectInputStream.readObject();
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter("inscription.txt", true));
+            String registrationLine = String.format("%s, %s, %s, %s, %s, %s, %s%n",
+                    registrationForm.getPrenom(),
+                    registrationForm.getNom(),
+                    registrationForm.getEmail(),
+                    registrationForm.getMatricule(),
+                    registrationForm.getCourse().getName(),
+                    registrationForm.getCourse().getCode(),
+                    registrationForm.getCourse().getSession());
+
+            bw.write(registrationLine);
+            bw.close();
+
+            objectOutputStream.writeObject("Inscription réussie!");
+            objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        }
-
-        if (registrationForm != null) {
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter("registrations.txt", true));
-                writer.write(registrationForm.toString());
-                writer.newLine();
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true);
-                printWriter.println("Confirmation: Votre formulaire d'inscription a été enregistré.");
-                printWriter.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true);
-                printWriter.println("Erreur: Le formulaire d'inscription n'a pas été reçu.");
-                printWriter.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
