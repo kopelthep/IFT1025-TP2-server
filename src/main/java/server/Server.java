@@ -138,7 +138,8 @@ public class Server {
                     registrationForm.getMatricule(),
                     registrationForm.getCourse().getName(),
                     registrationForm.getCourse().getCode(),
-                    registrationForm.getCourse().getSession());
+                    registrationForm.getCourse().getSession());//The resulting registrationLine string will have the
+                    // format:prenom, nom, email, matricule, course name, course code, course session
 
             bw.write(registrationLine);
             bw.close();
