@@ -99,7 +99,7 @@ public class Server {
             String line;
 
             while ((line = br.readLine()) != null) {
-                String[] courseInfo = line.split(",");
+                String[] courseInfo = line.split("\t"); // Utilisez une tabulation comme séparateur
                 if (courseInfo.length != 3) {
                     System.err.println("Erreur de format dans le fichier cours.txt: " + line);
                     continue;
@@ -124,7 +124,6 @@ public class Server {
             e.printStackTrace();
         }
     }
-
 
     /**
      Récupérer l'objet 'RegistrationForm' envoyé par le client en utilisant 'objectInputStream', l'enregistrer dans un fichier texte
