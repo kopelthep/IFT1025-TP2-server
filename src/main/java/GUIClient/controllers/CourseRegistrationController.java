@@ -50,10 +50,11 @@ public class CourseRegistrationController {
             List<Course> courses = (List<Course>) objectInputStream.readObject();
             model.setCourses(courses);
 
-            view.getCoursesListView().getItems().clear();
+            view.getCourseTableView().getItems().clear();
             for (Course course : courses) {
-                view.getCoursesListView().getItems().add(course.getCode() + "\t" + course.getName());
+                view.getCourseTableView().getItems().add(course);
             }
+
 
             objectOutputStream.close();
             objectInputStream.close();

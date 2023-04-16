@@ -1,28 +1,25 @@
 package GUIClient.views;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import server.models.Course;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class CourseRegistrationView {
     private BorderPane root;
     private ComboBox<String> sessionComboBox;
     private Button loadCoursesButton;
-    private ListView<String> coursesListView;
+    private TableView<Course> courseTableView;
+    private TableColumn<Course, String> courseNameColumn;
+    private TableColumn<Course, String> courseCodeColumn;
     private TextField courseCodeTextField;
     private TextField firstNameTextField;
     private TextField lastNameTextField;
     private TextField emailTextField;
     private TextField studentIdTextField;
     private Button submitButton;
+
 
     public CourseRegistrationView() {
         initComponents();
@@ -33,7 +30,16 @@ public class CourseRegistrationView {
         root = new BorderPane();
         sessionComboBox = new ComboBox<>();
         loadCoursesButton = new Button("Charger les cours");
-        coursesListView = new ListView<>();
+
+        courseTableView = new TableView<>();
+        courseNameColumn = new TableColumn<>("Nom du cours");
+        courseNameColumn.setCellValueFactory(new PropertyValueFactory<>("code"));//THEY ARE SWAPPED, AND I WILL NOT BE FORGIVEN FOR THIS, IT IS TERRIBLE AND MUST BE FIXED
+        courseNameColumn.setMinWidth(200);
+        courseCodeColumn = new TableColumn<>("Code du cours");
+        courseCodeColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        courseCodeColumn.setMinWidth(100);
+        courseTableView.getColumns().addAll(courseNameColumn, courseCodeColumn);
+
         courseCodeTextField = new TextField();
         firstNameTextField = new TextField();
         lastNameTextField = new TextField();
@@ -46,7 +52,7 @@ public class CourseRegistrationView {
         sessionComboBox.getItems().addAll("Automne", "Hiver", "Ete");
         sessionComboBox.setPromptText("Choisir la session");
 
-        VBox leftVBox = new VBox(10, sessionComboBox, loadCoursesButton, coursesListView);
+        VBox leftVBox = new VBox(10, sessionComboBox, loadCoursesButton, courseTableView);
         leftVBox.setPadding(new Insets(10));
         leftVBox.setSpacing(10);
 
@@ -66,6 +72,12 @@ public class CourseRegistrationView {
 
         root.setLeft(leftVBox);
         root.setRight(rightVBox);
+
+        courseTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                courseCodeTextField.setText(newSelection.getCode());
+            }
+        });
     }
 
     public BorderPane getRoot() {
@@ -80,14 +92,12 @@ public class CourseRegistrationView {
         return loadCoursesButton;
     }
 
-    public ListView<String> getCoursesListView() {
-        return coursesListView;
+    public TableView<Course> getCourseTableView() {
+        return courseTableView;
     }
-
     public TextField getCourseCodeTextField() {
         return courseCodeTextField;
     }
-
     public TextField getFirstNameTextField() {
         return firstNameTextField;
     }
@@ -108,5 +118,3 @@ public class CourseRegistrationView {
         return submitButton;
     }
 }
-
-

@@ -1,4 +1,4 @@
-package client;
+package GUIClient;
 
 import GUIClient.controllers.CourseRegistrationController;
 import GUIClient.models.CourseRegistrationModel;
