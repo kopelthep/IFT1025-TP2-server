@@ -134,15 +134,15 @@ public class Server {
         try {
             RegistrationForm registrationForm = (RegistrationForm) objectInputStream.readObject();
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter("inscription.txt", true));
-            String registrationLine = String.format("%s, %s, %s, %s, %s, %s, %s%n",
+            BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/java/server/data/inscription.txt", true));
+            String registrationLine = String.format("%s\t%s\t%s\t%s\t%s\t%s%n",
+                    registrationForm.getCourse().getSession(),
+                    registrationForm.getCourse().getCode(),
+                    registrationForm.getMatricule(),
                     registrationForm.getPrenom(),
                     registrationForm.getNom(),
-                    registrationForm.getEmail(),
-                    registrationForm.getMatricule(),
-                    registrationForm.getCourse().getName(),
-                    registrationForm.getCourse().getCode(),
-                    registrationForm.getCourse().getSession());//The resulting registrationLine string will have the
+                    registrationForm.getEmail());
+                    //The resulting registrationLine string will have the
                     // format:prenom, nom, email, matricule, course name, course code, course session (et un saut de ligne à la fin)
 
             bw.write(registrationLine);
