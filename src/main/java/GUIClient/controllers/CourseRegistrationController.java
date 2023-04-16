@@ -66,6 +66,7 @@ public class CourseRegistrationController {
 
     private void submitRegistration() {
         //TODO: implémenter la soumission du formulaire d'inscription
+        showError("Soumission du formulaire d'inscription");
     }
 
     private void showError(String message) {

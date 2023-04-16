@@ -104,8 +104,8 @@ public class Server {
                     System.err.println("Erreur de format dans le fichier cours.txt: " + line);
                     continue;
                 }
-                String name = courseInfo[0].trim();
-                String code = courseInfo[1].trim();
+                String code = courseInfo[0].trim();
+                String name = courseInfo[1].trim();
                 String session = courseInfo[2].trim();
 
                 Course course = new Course(name, code, session);

@@ -33,14 +33,16 @@ public class CourseRegistrationView {
 
         courseTableView = new TableView<>();
         courseNameColumn = new TableColumn<>("Nom du cours");
-        courseNameColumn.setCellValueFactory(new PropertyValueFactory<>("code"));//THEY ARE SWAPPED, AND I WILL NOT BE FORGIVEN FOR THIS, IT IS TERRIBLE AND MUST BE FIXED
+        courseNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         courseNameColumn.setMinWidth(200);
         courseCodeColumn = new TableColumn<>("Code du cours");
-        courseCodeColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        courseCodeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
         courseCodeColumn.setMinWidth(100);
-        courseTableView.getColumns().addAll(courseNameColumn, courseCodeColumn);
+        courseTableView.getColumns().addAll(courseCodeColumn, courseNameColumn);
 
         courseCodeTextField = new TextField();
+        courseCodeTextField.setEditable(false);
+        courseCodeTextField.setVisible(false);
         firstNameTextField = new TextField();
         lastNameTextField = new TextField();
         emailTextField = new TextField();
@@ -60,11 +62,10 @@ public class CourseRegistrationView {
         formGridPane.setHgap(10);
         formGridPane.setVgap(10);
         formGridPane.setPadding(new Insets(10));
-        formGridPane.addRow(0, new Label("Code de cours:"), courseCodeTextField);
-        formGridPane.addRow(1, new Label("Prénom:"), firstNameTextField);
-        formGridPane.addRow(2, new Label("Nom:"), lastNameTextField);
-        formGridPane.addRow(3, new Label("Email:"), emailTextField);
-        formGridPane.addRow(4, new Label("Matricule:"), studentIdTextField);
+        formGridPane.addRow(0, new Label("Prénom:"), firstNameTextField);
+        formGridPane.addRow(1, new Label("Nom:"), lastNameTextField);
+        formGridPane.addRow(2, new Label("Email:"), emailTextField);
+        formGridPane.addRow(3, new Label("Matricule:"), studentIdTextField);
 
         VBox rightVBox = new VBox(10, formGridPane, submitButton);
         rightVBox.setPadding(new Insets(10));
