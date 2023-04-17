@@ -21,6 +21,11 @@ public class Clientsimple {
         this.objectInputStream = new ObjectInputStream(socket.getInputStream());
     }
 
+    public void closeConnection() throws IOException {
+        objectInputStream.close();
+        objectOutputStream.close();
+        socket.close();
+    }
     private static String convertSessionChoiceToSessionName(String sessionChoice) {
         switch (sessionChoice) {
             case "1":
@@ -57,6 +62,7 @@ public class Clientsimple {
             client.objectOutputStream.flush();
 
             List<Course> availableCourses = (List<Course>) client.objectInputStream.readObject();
+            client.closeConnection();
             System.out.println("Les cours offerts pendant la session choisie sont:");
             int index = 1;
             for (Course course : availableCourses) {
@@ -82,6 +88,9 @@ public class Clientsimple {
             String email = scanner.nextLine();
             System.out.print("Veuillez saisir votre matricule: ");
             String matricule = scanner.nextLine();
+
+            client = new Clientsimple("localhost", 1337);
+
 
             server.models.RegistrationForm registrationForm = new server.models.RegistrationForm(prenom, nom, email, matricule, selectedCourse);
             client.objectOutputStream.writeObject(Server.REGISTER_COMMAND);
