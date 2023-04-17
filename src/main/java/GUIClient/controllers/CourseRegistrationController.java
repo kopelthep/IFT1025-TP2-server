@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class CourseRegistrationController {
@@ -34,6 +36,16 @@ public class CourseRegistrationController {
         view.getSubmitButton().setOnAction(event -> submitRegistration());
     }
 
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.find();
+    }
+
+    private boolean isValidMatricule(String matricule) {
+        return matricule.matches("\\d{8}");
+    }
     private void loadCourses() {
         String session = view.getSessionComboBox().getValue();
         if (session == null) {
@@ -78,6 +90,15 @@ public class CourseRegistrationController {
             return;
         }
 
+        if (!isValidEmail(email)) {
+            showError("Veuillez entrer un email valide.");
+            return;
+        }
+
+        if (!isValidMatricule(matricule)) {
+            showError("Le matricule doit être composé de 8 chiffres.");
+            return;
+        }
         RegistrationForm registrationForm = new RegistrationForm(prenom, nom, email, matricule, selectedCourse);
 
         try {
