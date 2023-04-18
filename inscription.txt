@@ -1,0 +1,4 @@
+Automne IFT2255 12345678    Michalis    Famelis mfamelis@iro.umontreal.ca
+Ete    IFT2256    20198839    Paul    Boulesteix    kopelthep@gmail.com
+Automne    IFT1015    12345678    Rayane    Karhat    rayane.karhat@umontreal.ca
+Automne	IFT1015	20198839	Paul	Boulesteix	kopelthep@gmail.com
